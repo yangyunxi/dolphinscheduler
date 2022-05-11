@@ -17,31 +17,31 @@
 
 package org.apache.dolphinscheduler.api;
 
-import java.util.TimeZone;
+import org.apache.dolphinscheduler.service.task.TaskPluginManager;
 
-import javax.annotation.PostConstruct;
-
-import org.quartz.SchedulerException;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.event.EventListener;
 
 @ServletComponentScan
 @SpringBootApplication
 @ComponentScan("org.apache.dolphinscheduler")
 public class ApiApplicationServer {
 
-    @Value("${spring.jackson.time-zone:UTC}")
-    private String timezone;
+    @Autowired
+    private TaskPluginManager taskPluginManager;
 
     public static void main(String[] args) {
         SpringApplication.run(ApiApplicationServer.class);
     }
 
-    @PostConstruct
-    public void run() {
-        TimeZone.setDefault(TimeZone.getTimeZone(timezone));
+    @EventListener
+    public void run(ApplicationReadyEvent readyEvent) {
+        // install task plugin
+        taskPluginManager.installPlugin();
     }
 }

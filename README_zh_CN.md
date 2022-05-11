@@ -20,7 +20,7 @@ Dolphin Scheduler Official Website
 其主要目标如下：
 
  - 以DAG图的方式将Task按照任务的依赖关系关联起来，可实时可视化监控任务的运行状态
- - 支持丰富的任务类型：Shell、MR、Spark、SQL(mysql、postgresql、hive、sparksql),Python,Sub_Process、Procedure等
+ - 支持丰富的任务类型：Shell、MR、Spark、SQL(mysql、postgresql、hive、sparksql)、Python、Sub_Process、Procedure等
  - 支持工作流定时调度、依赖调度、手动调度、手动暂停/停止/恢复，同时支持失败重试/告警、从指定节点恢复失败、Kill任务等操作
  - 支持工作流优先级、任务优先级及任务的故障转移及任务超时告警/失败
  - 支持工作流全局参数及节点自定义参数设置
@@ -36,19 +36,11 @@ Dolphin Scheduler Official Website
 
 ## 系统部分截图
 
-![home page](https://user-images.githubusercontent.com/15833811/75208819-abbad000-57b7-11ea-8d3c-67e7c270671f.jpg)
-
-![dag](https://user-images.githubusercontent.com/15833811/75209584-93e44b80-57b9-11ea-952e-537fb24ec72d.jpg)
-
-![log](https://user-images.githubusercontent.com/15833811/75209645-c55d1700-57b9-11ea-94d4-e3fa91ab5218.jpg)
-
-![gantt](https://user-images.githubusercontent.com/15833811/75209640-c0986300-57b9-11ea-878e-a2098533ad44.jpg)
-
-![resources](https://user-images.githubusercontent.com/15833811/75209403-11f42280-57b9-11ea-9b59-d4be77063553.jpg)
-
-![monitor](https://user-images.githubusercontent.com/15833811/75209631-b5ddce00-57b9-11ea-8d22-cdf15cf0ee25.jpg)
-
-![security](https://user-images.githubusercontent.com/15833811/75209633-baa28200-57b9-11ea-9def-94bef2e212a7.jpg)
+![dag](./images/zh_CN/dag.png)
+![data-source](./images/zh_CN/data-source.png)
+![home](./images/zh_CN/home.png)
+![master](./images/zh_CN/master.png)
+![workflow-tree](./images/zh_CN/workflow-tree.png)
 
 ## 近期研发计划
 
@@ -87,8 +79,8 @@ Dolphin Scheduler使用了很多优秀的开源项目，比如google的guava、g
 
 ## 获得帮助
 
-1. 提交issue
-2. 先订阅邮件开发列表:[订阅邮件列表](https://dolphinscheduler.apache.org/zh-cn/community/development/subscribe.html), 订阅成功后发送邮件到dev@dolphinscheduler.apache.org.
+1. 提交 [issue](https://github.com/apache/dolphinscheduler/issues/new/choose)
+2. [加入slack群](https://join.slack.com/t/asf-dolphinscheduler/shared_invite/zt-omtdhuio-_JISsxYhiVsltmC5h38yfw) 并在频道 `#troubleshooting` 中提问
 
 ## 社区
 

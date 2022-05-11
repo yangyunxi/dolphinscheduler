@@ -17,8 +17,6 @@
 
 package org.apache.dolphinscheduler.api.service;
 
-import static org.apache.dolphinscheduler.common.Constants.CMDPARAM_COMPLEMENT_DATA_END_DATE;
-import static org.apache.dolphinscheduler.common.Constants.CMDPARAM_COMPLEMENT_DATA_START_DATE;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -30,22 +28,26 @@ import org.apache.dolphinscheduler.api.service.impl.ProjectServiceImpl;
 import org.apache.dolphinscheduler.common.Constants;
 import org.apache.dolphinscheduler.common.enums.CommandType;
 import org.apache.dolphinscheduler.common.enums.ComplementDependentMode;
-import org.apache.dolphinscheduler.common.enums.ExecutionStatus;
 import org.apache.dolphinscheduler.common.enums.Priority;
 import org.apache.dolphinscheduler.common.enums.ReleaseState;
 import org.apache.dolphinscheduler.common.enums.RunMode;
+import org.apache.dolphinscheduler.common.enums.TaskGroupQueueStatus;
 import org.apache.dolphinscheduler.common.model.Server;
-import org.apache.dolphinscheduler.common.utils.DateUtils;
-import org.apache.dolphinscheduler.common.utils.JSONUtils;
 import org.apache.dolphinscheduler.dao.entity.Command;
 import org.apache.dolphinscheduler.dao.entity.ProcessDefinition;
 import org.apache.dolphinscheduler.dao.entity.ProcessInstance;
 import org.apache.dolphinscheduler.dao.entity.Project;
 import org.apache.dolphinscheduler.dao.entity.Schedule;
+import org.apache.dolphinscheduler.dao.entity.TaskGroupQueue;
 import org.apache.dolphinscheduler.dao.entity.Tenant;
 import org.apache.dolphinscheduler.dao.entity.User;
 import org.apache.dolphinscheduler.dao.mapper.ProcessDefinitionMapper;
+import org.apache.dolphinscheduler.dao.mapper.ProcessInstanceMapper;
+import org.apache.dolphinscheduler.dao.mapper.ProcessTaskRelationMapper;
 import org.apache.dolphinscheduler.dao.mapper.ProjectMapper;
+import org.apache.dolphinscheduler.dao.mapper.TaskDefinitionMapper;
+import org.apache.dolphinscheduler.dao.mapper.TaskGroupQueueMapper;
+import org.apache.dolphinscheduler.plugin.task.api.enums.ExecutionStatus;
 import org.apache.dolphinscheduler.service.process.ProcessService;
 
 import java.util.ArrayList;
@@ -83,6 +85,12 @@ public class ExecutorServiceTest {
     private ProcessDefinitionMapper processDefinitionMapper;
 
     @Mock
+    private ProcessTaskRelationMapper processTaskRelationMapper;
+
+    @Mock
+    private TaskDefinitionMapper taskDefinitionMapper;
+
+    @Mock
     private ProjectMapper projectMapper;
 
     @Mock
@@ -90,6 +98,12 @@ public class ExecutorServiceTest {
 
     @Mock
     private MonitorService monitorService;
+
+    @Mock
+    private TaskGroupQueueMapper taskGroupQueueMapper;
+
+    @Mock
+    private ProcessInstanceMapper processInstanceMapper;
 
     private int processDefinitionId = 1;
 
@@ -101,9 +115,13 @@ public class ExecutorServiceTest {
 
     private int userId = 1;
 
+    private int taskQueueId = 1;
+
     private ProcessDefinition processDefinition = new ProcessDefinition();
 
     private ProcessInstance processInstance = new ProcessInstance();
+
+    private TaskGroupQueue taskGroupQueue = new TaskGroupQueue();
 
     private User loginUser = new User();
 
@@ -141,6 +159,11 @@ public class ExecutorServiceTest {
         project.setCode(projectCode);
         project.setName(projectName);
 
+        // taskGroupQueue
+        taskGroupQueue.setId(taskQueueId);
+        taskGroupQueue.setStatus(TaskGroupQueueStatus.WAIT_QUEUE);
+        taskGroupQueue.setProcessId(processInstanceId);
+
         // cronRangeTime
         cronTime = "2020-01-01 00:00:00,2020-01-31 23:00:00";
 
@@ -153,6 +176,15 @@ public class ExecutorServiceTest {
         Mockito.when(monitorService.getServerListFromRegistry(true)).thenReturn(getMasterServersList());
         Mockito.when(processService.findProcessInstanceDetailById(processInstanceId)).thenReturn(processInstance);
         Mockito.when(processService.findProcessDefinition(1L, 1)).thenReturn(processDefinition);
+        Mockito.when(taskGroupQueueMapper.selectById(1)).thenReturn(taskGroupQueue);
+        Mockito.when(processInstanceMapper.selectById(1)).thenReturn(processInstance);
+    }
+
+    @Test
+    public void testForceStartTaskInstance(){
+
+        Map<String, Object> result = executorService.forceStartTaskInstance(loginUser, taskQueueId);
+        Assert.assertEquals(Status.SUCCESS, result.get(Constants.STATUS));
     }
 
     /**
